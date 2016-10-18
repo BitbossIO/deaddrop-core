@@ -1,0 +1,11 @@
+{
+  "wif": "Kwj77WiRdB2WMKVwXqfGUdLXwhn8VFAnQjcJnC7WiyiztZJkRoai",
+  "contact": {
+    "address": "localhost",
+    "port": 4002
+  },
+  "seed": {
+    "address": "localhost",
+    "port": 4000
+  }
+}

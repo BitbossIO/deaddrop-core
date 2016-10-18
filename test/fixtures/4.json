@@ -1,0 +1,9 @@
+{
+  "host": "localhost",
+  "port": "4004",
+  "url": "http://localhost:4004",
+  "wif": "L1P5oJDdVB9M9UZ5Bv6SXPdhs9DZjWNFqYsH5Sy61BuZgB3MeTMM",
+  "seeds": [
+    "http://localhost:3000"
+  ]
+}

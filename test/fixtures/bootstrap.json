@@ -1,0 +1,9 @@
+{
+  "host": "localhost",
+  "port": "3000",
+  "url": "http://localhost:3000",
+  "wif": "Kzy2JxadPx471n78PHLCp4zycTzrnduWRDMJb7TLMoNJFnwRHgPp",
+  "seeds": [
+    "http://localhost:3001"
+  ]
+}
