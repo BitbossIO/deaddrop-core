@@ -1,10 +1,11 @@
 {
-  "wif": "L4D5ZoKr85a3yhK3jt1uUfRic3BxoJmPuG7ppoQJfwPebmWawGqn",
   "contact": {
+    "privkey": "71e088100329d13855b318634077b612fd84712b5803e1fd3d57c0b06736a5a3",
     "address": "localhost",
     "port": 4000
   },
   "seed": {
+    "pubkey": "026183ccbef96d8e3ac317bded9805e9fe1ba98047eb25026665421dd7ea784776",
     "address": "localhost",
     "port": 4000
   }
