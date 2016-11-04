@@ -1,12 +1,26 @@
 {
-  "contact": {
+  "dropstore": {
     "privkey": "f544aba1f3bfe19b17091b83906a9909d0e262a16bf2a8890530675148935d8a",
-    "address": "localhost",
-    "port": 4001
+    "contact": {
+      "address": "localhost",
+      "port": 4001
+    },
+    "seed": {
+      "pubkey": "026183ccbef96d8e3ac317bded9805e9fe1ba98047eb25026665421dd7ea784776",
+      "address": "localhost",
+      "port": 4000
+    }
   },
-  "seed": {
-    "pubkey": "026183ccbef96d8e3ac317bded9805e9fe1ba98047eb25026665421dd7ea784776",
-    "address": "localhost",
-    "port": 4000
+  "dropnet": {
+    "privkey": "f544aba1f3bfe19b17091b83906a9909d0e262a16bf2a8890530675148935d8a",
+    "contact": {
+      "address": "localhost",
+      "port": 5001
+    },
+    "seed": {
+      "pubkey": "026183ccbef96d8e3ac317bded9805e9fe1ba98047eb25026665421dd7ea784776",
+      "address": "localhost",
+      "port": 5000
+    }
   }
 }

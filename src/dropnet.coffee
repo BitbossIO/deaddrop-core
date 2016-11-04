@@ -1,8 +1,6 @@
 promise = Promise ? require('es6-promise').Promise
 {EventEmitter} = require 'events'
 
-WebTorrent = require 'webtorrent'
-
 kad = require 'kad'
 spartacus = require 'kad-spartacus'
 
@@ -10,10 +8,8 @@ Contact = spartacus.ContactDecorator(kad.contacts.AddressPortContact)
 Quasar = require('kad-quasar').Protocol
 MemStore = require 'kad-memstore'
 
-class Router extends EventEmitter
+class Dropnet extends EventEmitter
   constructor: (@config={}) ->
-    @_client = new WebTorrent()
-    @_client.on 'error', (err) -> console.log 'Client Error', err
     @_keypair = new spartacus.KeyPair(@config.contact?.privkey)
 
     @_logger = kad.Logger(@config.loglevel ? 2)
@@ -32,19 +28,8 @@ class Router extends EventEmitter
 
     @_quasar = Quasar(@_router)
 
-    @_quasar.subscribe @_keypair.getPublicKey(), (infoHash) =>
+    @_quasar.subscribe @_keypair.getPublicKey(), (dropHash) =>
       console.log(infoHash)
-      @_client.add infoHash, (torrent) =>
-        console.log 'torrent'
-        torrent.on 'warning', (err) -> console.log('Torrent Warning', err)
-        torrent.on 'error', (err) -> console.log('Torrent Error', err)
-        torrent.on 'noPeers', (err) -> console.log('Torrent noPeers', err)
-        torrent.on 'done', =>
-          console.log 'done'
-          torrent.files.forEach (file) =>
-            file.getBuffer (err, buffer) =>
-              if err then console.log(err)
-              else console.log buffer.toString()
 
     @_node = new kad.Node
       transport: @_transport
@@ -61,8 +46,6 @@ class Router extends EventEmitter
 
   publish: (key, message) ->
     new promise (resolve, reject) =>
-      @_client.seed message, (torrent) =>
-        console.log torrent.infoHash
-        resolve @_quasar.publish key, torrent.infoHash
+      resolve @_quasar.publish key, torrent.infoHash
 
-module.exports = Router
+module.exports = Dropnet

@@ -9,12 +9,12 @@ expect = chai.expect
 
 Envelope = require 'ecc-envelope'
 
-DHT = require '../src/dht'
+DHT = require '../src/dropnet'
 
 describe 'DHT', ->
   before () ->
-    @config0 = require('./fixtures/0.json')
-    @config1 = require('./fixtures/1.json')
+    @config0 = require('./fixtures/0.json').dropnet
+    @config1 = require('./fixtures/1.json').dropnet
 
     @dht0 = new DHT(@config0)
     @dht1 = new DHT(@config1)
