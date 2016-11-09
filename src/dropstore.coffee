@@ -1,5 +1,6 @@
 promise = Promise ? require('es6-promise').Promise
 {EventEmitter} = require 'events'
+ecc = require 'ecc-tools'
 
 kad = require 'kad'
 spartacus = require 'kad-spartacus'
@@ -9,7 +10,7 @@ MemStore = require 'kad-memstore'
 
 class Dropstore extends EventEmitter
   constructor: (@config={}) ->
-    @_keypair = new spartacus.KeyPair(@config.contact?.privkey)
+    @_keypair = new spartacus.KeyPair(@config.privkey)
 
     @_logger = kad.Logger(@config.loglevel ? 2)
     @_contact = Contact
@@ -25,16 +26,12 @@ class Dropstore extends EventEmitter
       transport: @_transport
       logger: @_logger
 
-    @_quasar = Quasar(@_router)
-
-    @_quasar.subscribe @_keypair.getPublicKey(), (dropHash) =>
-      console.log(infoHash)
-
     @_node = new kad.Node
       transport: @_transport
       router: @_router
       logger: @_logger
       storage: MemStore()
+      validator: (key, value, cb) -> cb(key == ecc.bs58check.encode(ecc.checksum(value)))
 
   connect: (seed) -> new promise (resolve, reject) =>
     @_node.connect seed, (err) =>
@@ -42,5 +39,18 @@ class Dropstore extends EventEmitter
       else resolve(@)
 
   disconnect: -> @_node.disconnect()
+
+  put: (value) ->
+    new Promise (resolve, reject) =>
+      key = ecc.bs58check.encode(ecc.checksum(value))
+      @_node.put key, value, (err) ->
+        if err then reject(err)
+        else resolve(key)
+
+  get: (key) ->
+    new Promise (resolve, reject) =>
+      @_node.get key, (err, value) ->
+        if err then reject(err)
+        else resolve(value)
 
 module.exports = Dropstore

@@ -10,7 +10,7 @@ MemStore = require 'kad-memstore'
 
 class Dropnet extends EventEmitter
   constructor: (@config={}) ->
-    @_keypair = new spartacus.KeyPair(@config.contact?.privkey)
+    @_keypair = new spartacus.KeyPair(@config.privkey)
 
     @_logger = kad.Logger(@config.loglevel ? 2)
     @_contact = Contact
@@ -29,7 +29,7 @@ class Dropnet extends EventEmitter
     @_quasar = Quasar(@_router)
 
     @_quasar.subscribe @_keypair.getPublicKey(), (dropHash) =>
-      console.log(infoHash)
+      console.log(dropHash)
 
     @_node = new kad.Node
       transport: @_transport
@@ -46,6 +46,6 @@ class Dropnet extends EventEmitter
 
   publish: (key, message) ->
     new promise (resolve, reject) =>
-      resolve @_quasar.publish key, torrent.infoHash
+      resolve @_quasar.publish key, message
 
 module.exports = Dropnet
