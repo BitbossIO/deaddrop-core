@@ -9,7 +9,7 @@ Quasar = require('kad-quasar').Protocol
 MemStore = require 'kad-memstore'
 
 class Dropnet extends EventEmitter
-  constructor: (@config={}) ->
+  constructor: (@config={}, @_store) ->
     @_keypair = new spartacus.KeyPair(@config.privkey)
 
     @_logger = kad.Logger(@config.loglevel ? 2)
@@ -29,7 +29,10 @@ class Dropnet extends EventEmitter
     @_quasar = Quasar(@_router)
 
     @_quasar.subscribe @_keypair.getPublicKey(), (dropHash) =>
-      console.log(dropHash)
+      @_store.get(dropHash)
+      .then (envelope) => @emit('drop', envelope)
+
+    @on 'drop', (message) => console.log 'Message:', message
 
     @_node = new kad.Node
       transport: @_transport
@@ -44,8 +47,9 @@ class Dropnet extends EventEmitter
 
   disconnect: -> @_node.disconnect()
 
-  publish: (key, message) ->
-    new promise (resolve, reject) =>
-      resolve @_quasar.publish key, message
+  drop: (key, message) ->
+    @_store.put(message)
+    .then (dropHash) => @_quasar.publish key, dropHash
+
 
 module.exports = Dropnet
