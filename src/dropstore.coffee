@@ -33,6 +33,8 @@ class Dropstore extends EventEmitter
       storage: MemStore()
       validator: (key, value, cb) -> cb(key == ecc.bs58check.encode(ecc.checksum(value)))
 
+    @connect(@config.seed) if @config.seed?
+
   connect: (seed) -> new promise (resolve, reject) =>
     @_node.connect seed, (err) =>
       if err then reject(err)

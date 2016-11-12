@@ -1,15 +1,12 @@
-_ = require 'lodash'
-promise = Promise ? require('es6-promise').Promise
-io = require 'socket.io-client'
-
-Envelope = require './envelope'
-
-# {PrivateKey, PublicKey, Address} = bitcore
+Dropstore = require './dropstore'
+Dropnet = require './dropnet'
 
 class DeadDrop
   constructor: (@config={}) ->
-    @_socket = io(@config.host)
+    @dropstore = new Dropstore(@config.dropstore)
+    @dropnet = new Dropnet(@config.dropnet, @dropstore)
 
-DeadDrop.envelope = Envelope
+DeadDrop.Dropstore = Dropstore
+DeadDrop.Dropnet = Dropnet
 
 module.exports = DeadDrop

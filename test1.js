@@ -1,3 +1,4 @@
+var DeadDrop = require('./lib/index.js');
 var Dropstore = require('./lib/dropstore.js');
 var Dropnet = require('./lib/dropnet.js');
 var c0 = require('./test/fixtures/0.json')
@@ -13,7 +14,6 @@ var Test = {
   },
   s1: () => {
     var ds = new Dropstore(c1.dropstore);
-    ds.connect(c1.dropstore.seed);
     return ds;
   },
   n0: () => {
@@ -24,8 +24,15 @@ var Test = {
   n1: () => {
     var ds = Test.s1();
     var dn = new Dropnet(c1.dropnet, ds);
-    dn.connect(c1.dropnet.seed);
     return dn;
+  },
+  d0: () => {
+    dd = new DeadDrop(c0);
+    return dd;
+  },
+  d1: () => {
+    dd = new DeadDrop(c1);
+    return dd;
   },
   log: (e,m) => {
     if(e) {
