@@ -1,13 +1,16 @@
 {
+  "wallet": {
+    "alg":"aes",
+    "iv":"2GhpjTu6QWfu1VpPzKTH8Dp87gpN",
+    "ciphertext":"ASbCELNXzGDAAz72g41Cu3fF3go2bKAHjKfqBvGknrtXekb3ZhQtangxYyQMuPeUXASwEJ3kGhiL8gnCVdGMaXMBzHvXHUVEfADFf9rRiryw61pHtPG"
+  },
   "dropstore": {
-    "privkey": "71e088100329d13855b318634077b612fd84712b5803e1fd3d57c0b06736a5a3",
     "contact": {
       "address": "localhost",
       "port": 4000
     }
   },
   "dropnet": {
-    "privkey": "71e088100329d13855b318634077b612fd84712b5803e1fd3d57c0b06736a5a3",
     "contact": {
       "address": "localhost",
       "port": 5000

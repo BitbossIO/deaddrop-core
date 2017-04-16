@@ -1,26 +1,34 @@
 {
+  "wallet": {
+    "alg":"aes",
+    "iv":"GtkTso9BdAM7zenpRuB37icTZSQ",
+    "ciphertext":"DpFLaHeV3xW1Kedr99R5rL8MMfti9w4dL43az27khJwCgGaaoVyxS1BaRnizFmkKkEupSJrSCzwjyV2TH52XEpE22Z8NoAKoSDDG8Z39kA6GpGPtCox"
+  },
   "dropstore": {
-    "privkey": "f544aba1f3bfe19b17091b83906a9909d0e262a16bf2a8890530675148935d8a",
     "contact": {
       "address": "localhost",
       "port": 4001
     },
-    "seed": {
-      "pubkey": "026183ccbef96d8e3ac317bded9805e9fe1ba98047eb25026665421dd7ea784776",
-      "address": "localhost",
-      "port": 4000
-    }
+    "seed": [
+      "ebc0dc59bf5c7208ec62ab1d1c03f6acc630a81d",
+      {
+        "address": "localhost",
+        "port": 4000
+      }
+    ],
+    "zone": "5EHW1UsvGVt4AXZmnpRmfoisoUtU1a1KAiRCzUhM5xfjrW9HX4"
   },
   "dropnet": {
-    "privkey": "f544aba1f3bfe19b17091b83906a9909d0e262a16bf2a8890530675148935d8a",
     "contact": {
       "address": "localhost",
       "port": 5001
     },
-    "seed": {
-      "pubkey": "026183ccbef96d8e3ac317bded9805e9fe1ba98047eb25026665421dd7ea784776",
-      "address": "localhost",
-      "port": 5000
-    }
+    "seed": [
+      "2ec41a49a4e78d722f2333ac3d941a66788d722a",
+      {
+        "address": "localhost",
+        "port": 5000
+      }
+    ]
   }
 }
