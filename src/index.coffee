@@ -43,15 +43,8 @@ class DeadDrop
 
   contact: ->
     @connection.then (conn) =>
-      pubkey = conn.hdkey.publicKey.toString('hex')
-      dropnet:
-        pubkey: pubkey
-        address: @config.dropnet.contact.address
-        port: @config.dropnet.contact.port
-      dropstore:
-        pubkey: pubkey
-        address: @config.dropstore.contact.address
-        port: @config.dropstore.contact.port
+      dropnet: conn.dropnet.contact()
+      dropstore: conn.dropstore.contact()
 
   identity: ->
     @connection.then (conn) -> conn.dropnet._pub

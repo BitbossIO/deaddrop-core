@@ -14,25 +14,17 @@ class Dropnet extends EventEmitter
     @_db = levelup('/', { db: memdown })
 
     @_privateKey = @config.privkey
-    @_publicKey = ecc.publicKey(@_privateKey)
+    @_publicKey = ecc.publicKey(@_privateKey, true)
     @_prv = ecc.bs58check.encode(@_privateKey)
     @_pub = ecc.bs58check.encode(@_publicKey)
-
-    @_contact =
-      address: @config.contact.address
-      port: @config.contact.port
 
     @_node = kad
       transport: new kad.HTTPTransport()
       storage: @_db
-      contact:
-        address: @config.contact.address
-        port: @config.contact.port
+      contact: @config.contact
 
-    @_node.plugin(spartacus(@_keypair))
+    # @_node.plugin(spartacus(@_keypair))
     @_node.plugin(quasar)
-
-
 
     @register(@_privateKey)
 

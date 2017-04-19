@@ -6,6 +6,7 @@ kad = require 'kad'
 ecc = require 'ecc-tools'
 levelup = require 'levelup'
 memdown = require 'memdown'
+traverse = require 'kad-traverse'
 spartacus = require 'kad-spartacus'
 
 util = {
@@ -37,7 +38,12 @@ class Dropstore extends EventEmitter
       storage: @_db
       contact: @config.contact
 
-    @_node.plugin(spartacus(@_privateKey))
+    # @_node.plugin(spartacus(@_privateKey))
+    # @_node.plugin(traverse([
+      # new traverse.UPNPStrategy(publicPort: 8081),
+      # new traverse.NATPMPStrategy(),
+      # new traverse.ReverseTunnelStrategy()
+    # ]))
 
     @_node.use 'STORE', (request, response, next) =>
       [key, val] = request.params

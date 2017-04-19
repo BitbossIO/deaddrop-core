@@ -1,4 +1,5 @@
 {
+  "port": 9041,
   "wallet": {
     "alg":"aes",
     "iv":"GtkTso9BdAM7zenpRuB37icTZSQ",
@@ -6,13 +7,13 @@
   },
   "dropstore": {
     "contact": {
-      "address": "localhost",
+      "hostname": "localhost",
       "port": 4001
     },
     "seed": [
       "ebc0dc59bf5c7208ec62ab1d1c03f6acc630a81d",
       {
-        "address": "localhost",
+        "hostname": "lvh.me",
         "port": 4000
       }
     ],
@@ -20,13 +21,13 @@
   },
   "dropnet": {
     "contact": {
-      "address": "localhost",
+      "hostname": "localhost",
       "port": 5001
     },
     "seed": [
       "2ec41a49a4e78d722f2333ac3d941a66788d722a",
       {
-        "address": "localhost",
+        "hostname": "lvh.me",
         "port": 5000
       }
     ]

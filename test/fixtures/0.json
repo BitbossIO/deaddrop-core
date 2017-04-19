@@ -1,4 +1,5 @@
 {
+  "port": 9040,
   "wallet": {
     "alg":"aes",
     "iv":"2GhpjTu6QWfu1VpPzKTH8Dp87gpN",
@@ -6,13 +7,14 @@
   },
   "dropstore": {
     "contact": {
-      "address": "localhost",
+      "hostname": "lvh.me",
       "port": 4000
-    }
+    },
+    "zone": "5EHW1UsvGVt4AXZmnpRmfoisoUtU1a1KAiRCzUhM5xfjrW9HX4"
   },
   "dropnet": {
     "contact": {
-      "address": "localhost",
+      "hostname": "lvh.me",
       "port": 5000
     }
   }
