@@ -6,6 +6,7 @@ kad = require 'kad'
 ecc = require 'ecc-tools'
 levelup = require 'levelup'
 memdown = require 'memdown'
+quasar = require 'kad-quasar'
 traverse = require 'kad-traverse'
 spartacus = require 'kad-spartacus'
 
@@ -44,6 +45,7 @@ class Dropstore extends EventEmitter
       # new traverse.NATPMPStrategy(),
       # new traverse.ReverseTunnelStrategy()
     # ]))
+    @_node.plugin(quasar)
 
     @_node.use 'STORE', (request, response, next) =>
       [key, val] = request.params
@@ -58,6 +60,10 @@ class Dropstore extends EventEmitter
       #   return next(new Error('Key must be the RMD-160 hash of value'))
 
       next()
+
+    @register(@_privateKey)
+
+    @on 'drop', (message) => console.log 'Message:', message
 
     @connect()
 
@@ -81,6 +87,27 @@ class Dropstore extends EventEmitter
           else resolve(@)
 
   contact: -> [@_node.identity.toString('hex'), @_node.contact]
+
+  register: (privateKey) ->
+    privateKey = ecc.bs58check.decode(privateKey) if typeof(privateKey) is 'string'
+    publicKey = ecc.publicKey(privateKey, true)
+
+    @_node.quasarSubscribe ecc.bs58check.encode(publicKey), (dropHash) =>
+      @get(dropHash)
+      .then (envelope) => Envelope(decode: envelope, as: 'json').open(privateKey)
+      .then (envelope) =>
+        envelope.to = ecc.bs58check.encode(envelope.to) if envelope.to?
+        envelope.from = ecc.bs58check.encode(envelope.from) if envelope.from?
+        @emit('drop', envelope)
+
+  drop: (key, message, topic='drop', session) ->
+    key = ecc.bs58check.decode(key) if typeof(key) is 'string'
+    data = { topic: topic }
+    data[topic] = message
+    data.session = session if session?
+    Envelope(send: data, to: key, from: @_privateKey).encode('json')
+    .then (envelope) => @put(JSON.parse(envelope))
+    .then (dropHash) => @_node.quasarPublish ecc.bs58check.encode(key), dropHash
 
   put: (key, value, ttl=3600) ->
     console.log 'Put'

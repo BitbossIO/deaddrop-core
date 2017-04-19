@@ -7,7 +7,6 @@ ecc = require 'ecc-tools'
 crypto = require 'crypto'
 
 Dropstore = require './dropstore'
-Dropnet = require './dropnet'
 HDKey = require 'hdkey'
 
 PURPOSE_CODE = 99
@@ -34,20 +33,16 @@ class DeadDrop
       privkey = hdkey.privateKey
 
       @config.dropstore.privkey = privkey
-      @config.dropnet.privkey = privkey
 
       result = { hdkey: hdkey }
       result.dropstore = new Dropstore(@config.dropstore)
-      result.dropnet = new Dropnet(@config.dropnet, result.dropstore)
       result
 
   contact: ->
-    @connection.then (conn) =>
-      dropnet: conn.dropnet.contact()
-      dropstore: conn.dropstore.contact()
+    @connection.then (conn) => conn.dropstore.contact()
 
   identity: ->
-    @connection.then (conn) -> conn.dropnet._pub
+    @connection.then (conn) -> conn.dropstore._pub
 
   listener: (cb, topic, session) ->
     (envelope) ->
@@ -60,16 +55,16 @@ class DeadDrop
 
   subscribe: (cb, topic, session) ->
     @connection.then (conn) =>
-      conn.dropnet.on 'drop', @listener(cb, topic, session)
+      conn.dropstore.on 'drop', @listener(cb, topic, session)
       conn
 
   unsubscribe: (cb, topic, session) ->
     @connection.then (conn) ->
-      conn.dropnet.removeListener 'drop', @listener(cb, topic, session)
+      conn.dropstore.removeListener 'drop', @listener(cb, topic, session)
       conn
 
   drop: (key, message, topic, session) ->
-    @connection.then (conn) -> conn.dropnet.drop(key, message, topic, session)
+    @connection.then (conn) -> conn.dropstore.drop(key, message, topic, session)
 
   put: (key, value, ttl) ->
     @connection.then (conn) -> conn.dropstore.put(key, value, ttl)
@@ -105,10 +100,10 @@ class DeadDrop
             event.sender.send('deaddrop-identity', identity)
         when 'subscribe'
           @subscribe(((topic, envelope) -> event.sender.send(topic, envelope)), args[0], args[1])
-          .then (conn) -> event.sender.send('deaddrop-subscribed', conn.dropnet._pub)
+          .then (conn) -> event.sender.send('deaddrop-subscribed', conn.dropstore._pub)
         when 'unsubscribe'
           @unsubscribe(((topic, envelope) -> event.sender.send(topic, envelope)), args[0], args[1])
-          .then (conn) -> event.sender.send('deaddrop-unsubscribed', conn.dropnet._pub)
+          .then (conn) -> event.sender.send('deaddrop-unsubscribed', conn.dropstore._pub)
         when 'drop'
           @drop(args[0], args[1], args[2], args[3]).then -> event.sender.send("deaddrop-#{args[2]}-drop-sent", args)
 
@@ -116,7 +111,6 @@ class DeadDrop
 
 
 DeadDrop.Dropstore = Dropstore
-DeadDrop.Dropnet = Dropnet
 
 DeadDrop.encrypt = (data, pin, alg='aes') ->
   iv = crypto.randomBytes(16)
