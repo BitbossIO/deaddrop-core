@@ -39,7 +39,7 @@ class Dropstore extends EventEmitter
       storage: @_db
       contact: @config.contact
 
-    # @_node.plugin(spartacus(@_privateKey))
+    @_node.plugin(spartacus(@_privateKey))
     # @_node.plugin(traverse([
       # new traverse.UPNPStrategy(publicPort: 8081),
       # new traverse.NATPMPStrategy(),
