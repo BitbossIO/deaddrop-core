@@ -40,11 +40,11 @@ class Dropstore extends EventEmitter
       contact: @config.contact
 
     @_node.plugin(spartacus(@_privateKey))
-    # @_node.plugin(traverse([
-      # new traverse.UPNPStrategy(publicPort: 8081),
-      # new traverse.NATPMPStrategy(),
+    @_node.plugin(traverse([
+      new traverse.UPNPStrategy(),
+      new traverse.NATPMPStrategy()
       # new traverse.ReverseTunnelStrategy()
-    # ]))
+    ]))
     @_node.plugin(quasar)
 
     @_node.use 'STORE', (request, response, next) =>
