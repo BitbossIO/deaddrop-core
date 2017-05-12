@@ -4,6 +4,7 @@ Envelope = require 'ecc-envelope'
 
 kad = require 'kad'
 ecc = require 'ecc-tools'
+bunyan = require 'bunyan'
 levelup = require 'levelup'
 memdown = require 'memdown'
 quasar = require 'kad-quasar'
@@ -38,12 +39,13 @@ class Dropstore extends EventEmitter
       transport: new kad.HTTPTransport()
       storage: @_db
       contact: @config.contact
+      logger: bunyan.createLogger({ name: 'deaddrop' });
 
     @_node.plugin(spartacus(@_privateKey))
     @_node.plugin(traverse([
-      new traverse.UPNPStrategy(),
-      new traverse.NATPMPStrategy()
-      # new traverse.ReverseTunnelStrategy()
+      # new traverse.UPNPStrategy(),
+      # new traverse.NATPMPStrategy(),
+      new traverse.ReverseTunnelStrategy()
     ]))
     @_node.plugin(quasar)
 

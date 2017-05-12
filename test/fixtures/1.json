@@ -13,7 +13,7 @@
     "seed": [
       "ebc0dc59bf5c7208ec62ab1d1c03f6acc630a81d",
       {
-        "hostname": "lvh.me",
+        "hostname": "charlie.testnet.deaddrop.me",
         "port": 4000
       }
     ],
@@ -27,7 +27,7 @@
     "seed": [
       "2ec41a49a4e78d722f2333ac3d941a66788d722a",
       {
-        "hostname": "lvh.me",
+        "hostname": "charlie.testnet.deaddrop.me",
         "port": 5000
       }
     ]

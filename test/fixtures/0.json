@@ -7,14 +7,14 @@
   },
   "dropstore": {
     "contact": {
-      "hostname": "lvh.me",
+      "hostname": "127.0.0.1",
       "port": 4000
     },
     "zone": "5EHW1UsvGVt4AXZmnpRmfoisoUtU1a1KAiRCzUhM5xfjrW9HX4"
   },
   "dropnet": {
     "contact": {
-      "hostname": "lvh.me",
+      "hostname": "127.0.0.1",
       "port": 5000
     }
   }
