@@ -45,7 +45,7 @@ class Dropstore extends EventEmitter
     @_node.plugin(traverse([
       # new traverse.UPNPStrategy(),
       # new traverse.NATPMPStrategy(),
-      new traverse.ReverseTunnelStrategy()
+      new traverse.ReverseTunnelStrategy({remoteAddress: 'darkweb.io'})
     ]))
     @_node.plugin(quasar)
 
