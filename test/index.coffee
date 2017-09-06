@@ -4,52 +4,72 @@ chaiAsPromised = require 'chai-as-promised'
 chai = require 'chai'
 
 chai.use chaiAsPromised
-
 expect = chai.expect
 
 DeadDrop = require '../src'
 
 describe 'DeadDrop', ->
-  describe 'encrypt', ->
-    it 'should encrypt data with a pin', ->
-      cipher = DeadDrop.encrypt('hello world', '1234')
-      expect(cipher).to.eventually.be.an.object
-      expect(cipher).to.eventually.contain.all.keys(['iv','alg','ciphertext'])
+  before ->
+    @key = DeadDrop.Key()
+    @data = {hello: 'world'}
+    @document = DeadDrop.Document(@key, @data)
 
-  describe 'decrypt', ->
-    it 'should decrypt data with a pin', ->
-      text = 'hello world'
-      pin = '1234'
-      result = DeadDrop.encrypt(text, pin)
-      .then (cipher) -> DeadDrop.decrypt(cipher, pin)
+    @document.serialize()
+      .then (document) =>
+        @documents = {}
+        @documents[document.hash] = document
+        @deaddrop = DeadDrop('memory', documents: @documents)
 
-      expect(result).to.eventually.equal(text)
+  describe 'document', ->
+    it 'should return the document body for an encoded hash', ->
+      document = @deaddrop.document(@key.encoded('hash'))
+      expect(document).to.eventually.deep.equal(@data)
 
-  describe '@', ->
-    before ->
-      @config = require('./fixtures/0.json')
-      @deaddrop = new DeadDrop @config
+    it 'should return the document body for a hash', ->
+      document = @deaddrop.document(@key.hash)
+      expect(document).to.eventually.deep.equal(@data)
 
-    it 'should connect', ->
-      result = DeadDrop.wallet()
-      .then (wallet) => @config.wallet = wallet
-      .then => @deaddrop.connect('0000')
-      expect(result).to.eventually.contain.all.keys(['hdkey', 'dropstore', 'dropnet'])
+    it 'should return the document body for a public key', ->
+      document = @deaddrop.document(@key.public)
+      expect(document).to.eventually.deep.equal(@data)
 
-#   it 'should create a network of peers', ->
-#     expect(@deaddrop.peers).to.be.an.instanceOf(require '../src/peers')
-#
-#   it 'should create a datastore', ->
-#     expect(@deaddrop.datastore).to.be.an.instanceOf(require '../src/datastore')
-#
-#   it 'should have a beating heart', (done) ->
-#     _.delay =>
-#       expect(@deaddrop.heart.age).to.be.greaterThan(0)
-#       done()
-#     , 100
-#
-#   it 'should give peers a pulse', ->
-#     expect(@deaddrop.peers.pulse).to.exist
-#
-#   it 'should give datastore a pulse', ->
-#     expect(@deaddrop.datastore.pulse).to.exist
+    it 'should return the document body for a private key', ->
+      document = @deaddrop.document(@key.private)
+      expect(document).to.eventually.deep.equal(@data)
+
+    it 'should store a document body with a private key', ->
+      key = DeadDrop.Key()
+      document = @deaddrop.document(key.private, @data)
+        .then => @deaddrop.document(key.private)
+      expect(document).to.eventually.deep.equal(@data)
+
+
+  describe 'dns', ->
+    before () ->
+      @host = '127.0.0.1'
+      @zone =
+        com:
+          example:
+            '.': '1key'
+            test: '0key'
+
+    describe 'resolve', ->
+      it 'should resolve a domain from a zone leaf', ->
+        result = @deaddrop.document(DeadDrop.Key(), host: @host)
+        .then (key) =>
+          @deaddrop.resolve('example.com', {com: {example: key}})
+        expect(result).to.eventually.eql(@host)
+
+    describe 'lookup', ->
+      it 'should lookup a domain from a zone leaf', ->
+        result = @deaddrop.lookup('test.example.com', @zone)
+        expect(result).to.eventually.eql('0key')
+
+      it 'should lookup a domain from a zone node', ->
+        result = @deaddrop.lookup('example.com', @zone)
+        expect(result).to.eventually.eql('1key')
+
+      it 'should lookup a domain from a zone status key', ->
+        result = @deaddrop.document(@key, zone: @zone)
+        .then (zone) => @deaddrop.lookup('example.com', zone)
+        expect(result).to.eventually.eql('1key')
